@@ -14,7 +14,7 @@ const SECRET_Key = process.env.SECRET_Key;
             await User.create(req.body)
             res.status(201).json({
                 status : true , 
-                message :"Register correctly"
+                message :"Register correctly" , user
             })
           }
         else{
