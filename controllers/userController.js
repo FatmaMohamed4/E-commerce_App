@@ -40,3 +40,17 @@ const SECRET_Key = process.env.SECRET_Key;
             }) 
     })
 
+
+    export const getUser =catchError(async(req,res)=>{
+      const id =req.body.id
+      const user =await User.findById(id)
+      if(!user){
+        return next(new AppError('User not found ', 400) )
+      }
+      
+      res.status(200).json({
+        status : true , 
+        message :`Welcom ` ,
+        user
+    }) 
+    })
