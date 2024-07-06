@@ -21,6 +21,8 @@ categoryRoute.get('/:categoryName' ,
 categoryRoute.post('/',
     protect,addProd_ToOrderMW,addProductsToCategory)
 
-categoryRoute.post('/filter', 
-    protect,getProd_CategoryMW,getProductsAndCategory )
+// categoryRoute.post('/filter', 
+//     protect, getProd_CategoryMW,getProductsAndCategory )
+
+// categoryRoute.patch('/update/:id', upateCategory)
 export default categoryRoute

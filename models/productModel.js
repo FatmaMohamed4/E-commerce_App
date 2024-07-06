@@ -65,6 +65,10 @@ const productSchema = new mongoose.Schema (
       photos :{
         type : String ,
         
+      } ,
+      bestSelling :{
+        type :Boolean ,
+        default :false
       }
     },
     { timestamps: true }
@@ -78,6 +82,7 @@ productSchema.pre("save", function (next) {
   this.slug = slugify(this.productName, { lower: true });
   next();
 });
+
 const Product = mongoose.model('Product', productSchema);
 
 export default Product;

@@ -14,7 +14,8 @@ const SECRET_Key = process.env.SECRET_Key;
            const newUser = await User.create(req.body)
             res.status(201).json({
                 status : true , 
-                message :"Register correctly" , newUser : newUser
+                message :"Register correctly" ,
+                newUser : newUser
             })
           }
         else{
@@ -40,6 +41,21 @@ const SECRET_Key = process.env.SECRET_Key;
             }) 
     })
 
+    export const updateAccount = catchError(async (req, res, next) => {
+      const userId = req.user._id;
+      const updateData = req.body; 
+    
+      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+        new: true,
+        runValidators: true, 
+      });
+    
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+    
+      res.status(200).json(updatedUser);
+    });
 
     export const getUser =catchError(async(req,res)=>{
       const id =req.body.id
@@ -54,3 +70,10 @@ const SECRET_Key = process.env.SECRET_Key;
         user
     }) 
     })
+
+
+
+
+
+
+

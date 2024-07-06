@@ -1,7 +1,7 @@
 import mongoose, { model } from "mongoose";
 
 const checkSchema = new mongoose.Schema({
-    address :{
+    Address :{
         type : String , 
         required :[true ,"Enter your Adress in detail"] 
     } ,
@@ -20,7 +20,18 @@ const checkSchema = new mongoose.Schema({
     user :{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
-    }
+    } ,
+    fName :{
+        type : String , 
+        required :[true ,"Enter your first name"] 
+    } ,
+    city:{
+        type : String , 
+        required :[true ,"Enter your city "] 
+
+    } ,
+    
+
 
 })
 

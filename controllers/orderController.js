@@ -142,3 +142,18 @@ export const addProductsTo_FAV = catchError(async (req, res, next) => {
         order: updatedOrder
     });
 });
+
+
+export const getOrders_ofUser = catchError(async(req,res,next)=>{
+    const user = req.user._id
+    const orders = await Order.find({userId :user }).populate('products','-bestSelling -_id -stock -rate -createdAt -updatedAt -slug -__v -categoryName')
+
+    if(!orders){
+        return next(new AppError('Orders not found', 404));
+    }
+    res.status(200).json({
+      status: true,
+      message: "Orders",
+      orders,
+    });
+})

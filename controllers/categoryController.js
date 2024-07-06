@@ -4,7 +4,7 @@ import Category from "../models/categoryModel.js"
 import Product from "../models/productModel.js"
 
 
-export const addCategory =catchError(async(req,res)=>{
+export const addCategory =catchError(async(req,res,next)=>{
             const {categoryName , products } = req.body 
 
             const  categoty = await Category.findOne(
@@ -19,20 +19,15 @@ export const addCategory =catchError(async(req,res)=>{
                     catgory : catgory
                 })
             }else {
-                res.status(409).json({
-                    status : false ,
-                    message : "Category is existed" 
-                })
+                return next(new AppError('Category is exist ', 409));
             }
    })
 
-export const getCategories = catchError(async(req,res) =>{
+export const getCategories = catchError(async(req,res, next) =>{
            const all = await Category.find().select('-products -_id -__v -slug -createdAt -updatedAt')
+        //    .populate('products')
            if(!all){
-            res.status(404).json({
-                status : false ,
-                message : "Categories not found" 
-            })
+            return next(new AppError('Categories not found', 404));
            }else {
             res.status(200).json({
                 status : true ,
@@ -41,20 +36,17 @@ export const getCategories = catchError(async(req,res) =>{
            }
     })
 
-export const getCategory =catchError(async(req,res)=>{
+export const getCategory =catchError(async(req,res,next)=>{
         const categoryName = req.params.categoryName 
         const category = await Category.findOne({
             $or: [
                 { categoryName: categoryName },
                 { slug: categoryName }
             ]
-        }).select('-_id -__v -slug -createdAt -updatedAt');
+        }).select('-_id -__v -slug -createdAt -updatedAt').populate('products')
 
         if(!category){
-            res.status(404).json({
-                status : false ,
-                message : "Category not found" 
-            })
+            return next(new AppError('Category not found', 404));;
         }
         res.status(200).json({
             status : true ,
@@ -66,10 +58,7 @@ export const upateCategory =catchError(async(req,res)=>{
         const id =req.params.id 
         const category = await Category.findByIdAndUpdate(id , req.body,{ new: true})
         if(!id){
-            res.status(404).json({
-                status : false ,
-                message : "Category not found" 
-            })
+            return next(new AppError('Category not found', 404));
         } else{
             res.status(200).json({
                 status : true ,
@@ -82,10 +71,7 @@ export const upateCategory =catchError(async(req,res)=>{
 export const deleteCategory = catchError(async (req,res)=>{
            const category = await Category.findByIdAndDelete(req.params.id)
             if(!category){
-                res.status(404).json({
-                    status : false ,
-                    message : "Category ID is not found" 
-                })
+                return next(new AppError('Category not found', 404));
             } 
             res.status(200).json({
                 status : true ,
@@ -94,8 +80,8 @@ export const deleteCategory = catchError(async (req,res)=>{
     })
 
 
-
-export const addProductsToCategory = catchError(async (req, res, next) => {
+// 
+    export const addProductsToCategory = catchError(async (req, res, next) => {
         const { categoryId, productIds } = req.body;
     
         try {
@@ -130,18 +116,17 @@ export const addProductsToCategory = catchError(async (req, res, next) => {
         }
     });
 
-    
+
 
 export const getProductsAndCategory = catchError(async (req, res, next) => {
         try {
             const categoryName = req.body.categoryName
-            const products = await Product.find({categoryName}).select( '-_id -__v -slug -createdAt -updatedAt -stock -quantity -categoryName');
+            const products = await Product.find({categoryName})
+            // .select( '-_id -__v -slug -createdAt -updatedAt -stock -quantity -categoryName')
+            .populate('products')
     
             if (!products) {
-                return res.status(404).json({
-                    status: false,
-                    message: "No products found"
-                });
+                return next(new AppError('Products not found', 404));
             }
     
             res.status(200).json({

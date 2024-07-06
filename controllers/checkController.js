@@ -9,17 +9,19 @@ export const getCheckOut =catchError(async (req,res,next)=>{
     const id =req.params.OrderId 
     const address = req.body.address
     const payment =req.body.payment 
+    const fName =req.body.fName
+    const city =req.body.city
     const order = await Order.findOne(id)
     if(!order){
         return next(new AppError('Order not found', 404));
     }
 
 // Ensure address and payment details are provided
-if (!address || !payment) {
-    return next(new AppError('Address and payment details are required', 400));
+if (!address || !payment || !fName ) {
+    return next(new AppError('Field id required', 400));
 }
 
-const checkOut = await CheckOut.create({ address, payment, order: id ,userId :user});
+const checkOut = await CheckOut.create({ address, payment, order: id ,userId :user , fName , city});
 const totalCost =await Order.findOne(id).select('-userId -products -totalAmount -_id -createdAt -updatedAt -__v')
 checkOut.TotalCost = order.totalCost
 
@@ -40,7 +42,7 @@ res.status(201).json ({
 export const editCheckOut = catchError(async (req, res, next) => {
     const userId = req.user._id;
     const orderId = req.params.OrderId;
-    const { address, payment } = req.body;
+    const { address, payment ,  city , fName } = req.body;
 
     // Find the order by ID
     const order = await Order.findOne(orderId).populate('products.productId');
@@ -57,7 +59,7 @@ export const editCheckOut = catchError(async (req, res, next) => {
     // Update the CheckOut record
     const checkOut = await CheckOut.findOneAndUpdate(
         { order: orderId },
-        { address, payment },
+        { address, payment , city , fName},
         { new: true, runValidators: true }
     ).select('-_id -__v');
 

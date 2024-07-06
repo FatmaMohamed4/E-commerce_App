@@ -8,7 +8,10 @@ const categorySchema = new mongoose.Schema(
             required: [true, "Category Name is required"],
             unique: true
         },
-        products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }] ,
+        products: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        }] ,
         slug: {
             type: String,
             unique: true
