@@ -43,7 +43,7 @@ const SECRET_Key = process.env.SECRET_Key;
     })
 
     export const updateAccount = catchError(async (req, res, next) => {
-      const userId = req.user._id;
+      const userId = req.userId;
       const updateData = req.body; 
     
       const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
