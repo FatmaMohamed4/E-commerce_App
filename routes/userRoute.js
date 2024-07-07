@@ -7,5 +7,5 @@ const userRoute = express.Router();
 userRoute.post('/register',register)
 userRoute.post('/login',LogIn)
 userRoute.get('/get', getUser)
-userRoute.put('/updateAccount',updateAccount )
+userRoute.put('/updateAccount/:userId',updateAccount )
 export default userRoute
