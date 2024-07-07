@@ -38,7 +38,7 @@ const SECRET_Key = process.env.SECRET_Key;
                 status : true , 
                 message :`Welcom Again ${user.userName}` ,
                 token :token,
-                user: user
+                user
             }) 
     })
 
