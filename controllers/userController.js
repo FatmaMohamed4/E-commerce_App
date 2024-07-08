@@ -37,20 +37,15 @@ const SECRET_Key = process.env.SECRET_Key;
             res.status(200).json({
                 status : true , 
                 message :`Welcom Again ${user.userName}` ,
-                token :token,
-                user
+                token :token , 
+user
             }) 
     })
 
     export const updateAccount = catchError(async (req, res, next) => {
-      const userId = req.userId;
-      const updateData = req.body; 
+       const userId = req.params.userId;    
     
-      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-        new: true,
-        runValidators: true, 
-      });
-    
+    const updatedUser = await User.updateOne({_id: userId}, {$set: {...req.body}});
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -71,10 +66,3 @@ const SECRET_Key = process.env.SECRET_Key;
         user
     }) 
     })
-
-
-
-
-
-
-
