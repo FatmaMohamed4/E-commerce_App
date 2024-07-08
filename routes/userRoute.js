@@ -7,5 +7,5 @@ const userRoute = express.Router();
 userRoute.post('/register',register)
 userRoute.post('/login',LogIn)
 userRoute.get('/get', getUser)
-userRoute.patch('/:userId', updateAccount)
+userRoute.patch('update/:userId', updateAccount)
 export default userRoute
