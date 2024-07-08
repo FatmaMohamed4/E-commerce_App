@@ -1,5 +1,5 @@
 import express from "express"
-import  { LogIn, getUser, register } from "../controllers/userController.js";
+import  { LogIn, getUser, register ,updateAccount} from "../controllers/userController.js";
 
 const userRoute = express.Router();
 
@@ -7,4 +7,5 @@ const userRoute = express.Router();
 userRoute.post('/register',register)
 userRoute.post('/login',LogIn)
 userRoute.get('/get', getUser)
+userRoute.patch('/:userId', updateAccount)
 export default userRoute
