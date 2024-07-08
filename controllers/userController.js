@@ -43,14 +43,9 @@ user
     })
 
     export const updateAccount = catchError(async (req, res, next) => {
-      const userId = req.user._id;
-      const updateData = req.body; 
+       const userId = req.params.userId;    
     
-      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-        new: true,
-        runValidators: true, 
-      });
-    
+    const updatedUser = await User.updateOne({_id: userId}, {$set: {...req.body}});
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
