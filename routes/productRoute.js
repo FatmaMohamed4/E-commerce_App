@@ -14,6 +14,6 @@ productRoute.delete("/:productId", deleteProduct);
 // get single product
 productRoute.get("/:productId", getProduct);
 
-productRoute.get("/all", getProducts);
+productRoute.get("/", getProducts);
 
 export default productRoute;

@@ -1,8 +1,9 @@
-import mongoose, { model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import slugify from "slugify";
 
 const productSchema = new mongoose.Schema(
   {
+    _id: Schema.ObjectId,
     title: {
       type: String,
       required: [true, "Product Name is required"],
@@ -18,7 +19,7 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product Price is required"],
       validate: {
         validator: function (v) {
-          return v >= 0; // Ensures the price is not negative
+          return v >= 0;
         },
         message: "not valid value ",
       },
