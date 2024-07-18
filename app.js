@@ -7,6 +7,7 @@ import cors from "cors";
 import orderRoute from "./routes/orderRoute.js";
 import checkRoute from "./routes/checkRoute.js";
 import employeeRoute from "./routes/employeeRoute.js";
+import photoRoute from "./routes/photoRoute.js";
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -17,6 +18,7 @@ app.use("/user", userRoute);
 app.use("/order", orderRoute);
 app.use("/checkout", checkRoute);
 app.use("/employee", employeeRoute);
+app.use('/photo',photoRoute)
 // app.use('/',(req,res)=>{
 //   res.send("Hello Supermarket App")
 // })
