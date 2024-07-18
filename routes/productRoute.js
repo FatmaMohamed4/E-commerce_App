@@ -1,19 +1,17 @@
-import express from "express";
-import {
-  deleteProduct,
-  getProducts,
-  updateProduct,
-  addProduct,
-  getProduct,
-} from "../controllers/productController.js";
+
+import express from "express"
+import { deleteProduct, getOneProduct, getProducts, updateProduct ,addProduct } from '../controllers/productController.js'
+import protect from "../utils/protect.js";
 const productRoute = express.Router();
 
-productRoute.post("/add", addProduct);
-productRoute.patch("/:productId", updateProduct);
-productRoute.delete("/:productId", deleteProduct);
-// get single product
-productRoute.get("/:productId", getProduct);
 
-productRoute.get("/", getProducts);
+productRoute.post('/add',addProduct)
+productRoute.patch('/:id',updateProduct)
+productRoute.delete('/:id', deleteProduct)
 
-export default productRoute;
+
+
+productRoute.get('/all',protect,getProducts)
+productRoute.post('/one',getOneProduct)
+
+export default productRoute
