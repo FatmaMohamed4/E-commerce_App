@@ -1,16 +1,10 @@
-import express from "express";
-import {
-  LogIn,
-  register,
-  updateAccount,
-  deleteUser,
-} from "../controllers/userController.js";
+import express from "express"
+import  { LogIn, getUser, register } from "../controllers/userController.js";
 
 const userRoute = express.Router();
 
-userRoute.post("/register", register);
-userRoute.post("/login", LogIn);
-userRoute.patch("/update/:userId", updateAccount);
-userRoute.delete("/delete/:userId", deleteUser);
 
-export default userRoute;
+userRoute.post('/register',register)
+userRoute.post('/login',LogIn)
+userRoute.get('/get', getUser)
+export default userRoute
