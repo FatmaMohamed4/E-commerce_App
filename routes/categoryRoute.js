@@ -1,7 +1,6 @@
 import express from "express"
-import { addCategory, addProductsToCategory, deleteCategory, getCategories, getCategory, getProductsAndCategory, upateCategory } from "../controllers/categoryController.js";
+import { addCategory, addProductsToCategory, deleteCategory, getCategories, getCategory, upateCategory } from "../controllers/categoryController.js";
 import protect from "../utils/protect.js";
-import { addProd_ToOrderMW, getCategoryMW, getProd_CategoryMW } from "../validations/categoryValidations.js";
 
 const categoryRoute = express.Router();
 
@@ -16,10 +15,10 @@ categoryRoute.get('/all',
     protect,getCategories)
 
 categoryRoute.get('/:categoryName' ,
-    protect,getCategoryMW,getCategory)
+    protect,getCategory)
 
 categoryRoute.post('/',
-    protect,addProd_ToOrderMW,addProductsToCategory)
+    protect,addProductsToCategory)
 
 // categoryRoute.post('/filter', 
 //     protect, getProd_CategoryMW,getProductsAndCategory )

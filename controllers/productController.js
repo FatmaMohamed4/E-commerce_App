@@ -1,18 +1,8 @@
 import AppError from "../middlewares/AppError.js";
 import catchError from "../middlewares/catchError.js";
 import Product from "../models/productModel.js";
+import {uploadPhoto } from './../utils/photos.js';
 
-// Add a new product
-export const addProduct = catchError(async (req, res, next) => {
-    const newProduct = await Product.create(req.body);
-    if (!newProduct) {
-        return next(new AppError('Error adding new product', 400));
-    }
-    res.status(201).json({
-        message: "Added a new product",
-        product: newProduct
-    });
-});
 
 // Get all products
 export const getProducts = catchError(async (req, res, next) => {
@@ -26,28 +16,28 @@ export const getProducts = catchError(async (req, res, next) => {
     });
 });
 
-//Get one product by name or id
-export const getOneProduct = catchError(async (req, res, next) => {
-    const { name, id } = req.body;
-    let product;
+// export const getOneProduct = catchError(async (req, res, next) => {
+//     const { productName } = req.body.productName;
+//     let product;
 
-    if (name) {
-        product = await Product.findOne(
-            { $or: [{ productName: name }, { slug: name }] }
-        ).select('-__v -slug');
-    } else if (id) {
-        product = await Product.findById(id).select('-__v -slug');
-    }
+//     product = await Product.find({
+//         productName: { $regex: productName, $options: 'i' } // 'i' for case-insensitive matching
+//     });
 
-    if (!product) {
-        return next(new AppError('Product not found', 404));
-    }
+//     if (!product || product.length === 0) {
+//         return next(new AppError('Product not found', 404));
+//     }
 
-    res.status(200).json({
-        status: 'success',
-        product: product
-    });
-});
+//     res.status(200).json({
+//         status: 'success',
+//         product: product
+//     });
+// });
+
+
+
+
+
 
 // Update a product
 export const updateProduct = catchError(async (req, res, next) => {
@@ -80,3 +70,13 @@ export const deleteProduct = catchError(async (req, res, next) => {
 });
 
 
+export const addProduct = catchError(async(req,res,next)=>{
+            const photo = req.body.photo;
+            await Product.create(req.body)
+            res.status(201).json({
+                status: true,
+                message : "Created",   
+            });
+          
+    }
+)

@@ -10,7 +10,6 @@ const productSchema = new mongoose.Schema (
 
       slug: {
       type: String,
-      unique: true,
       },
 
       price: {
@@ -37,7 +36,7 @@ const productSchema = new mongoose.Schema (
       size: {
         type: String,
         enum: ['s', 'xs', 'm', 'l', 'xl'],
-        // required: true 
+        required:  [true, "Size is required"], 
     } ,
 
       productDetail :{
@@ -48,7 +47,7 @@ const productSchema = new mongoose.Schema (
       rate: {
         type: Number,
         enum: [0, 1, 1.5 , 2 ,2.5 , 3 , 3.5 , 4, 4.5, 5 ], 
-        // required: [true, "Rate is required"],
+        required: [true, "Rate is required"],
         default : 0
       }, 
 
@@ -62,7 +61,7 @@ const productSchema = new mongoose.Schema (
         type: String,
         enum :['red' , 'blue' , 'green' , 'black' ,'white', 'yello']
       } ,
-      photos :{
+      photo :{
         type : String ,
         
       } ,

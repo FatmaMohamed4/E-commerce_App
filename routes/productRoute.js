@@ -1,17 +1,17 @@
 
 import express from "express"
-import { deleteProduct, getOneProduct, getProducts, updateProduct ,addProduct } from '../controllers/productController.js'
+import { addProduct, deleteProduct, getProducts, updateProduct  } from '../controllers/productController.js'
 import protect from "../utils/protect.js";
+import { uploadPhoto } from './../utils/photos.js';
 const productRoute = express.Router();
 
 
-productRoute.post('/add',addProduct)
+productRoute.post('/add',uploadPhoto,addProduct)
+
+
 productRoute.patch('/:id',updateProduct)
 productRoute.delete('/:id', deleteProduct)
-
-
-
 productRoute.get('/all',protect,getProducts)
-productRoute.post('/one',getOneProduct)
+
 
 export default productRoute
