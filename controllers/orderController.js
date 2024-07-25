@@ -63,10 +63,6 @@ export const addProductsToOrder = catchError(async (req, res, next) => {
         return next(new AppError('Order not found', 404));
     }
 
-    if (order.userId.toString() !== userId.toString()) {
-        return next(new AppError('Unauthorized to update this order', 403));
-    }
-
     if (req.body.products && Array.isArray(req.body.products)) {
         order.products.push(...req.body.products);
     }
@@ -81,10 +77,10 @@ export const addProductsToOrder = catchError(async (req, res, next) => {
 });
 
 export const calculateOrderTotals =catchError( async( req,res,next) => {
-    const { orderId } = req.params.id;
+    const orderId  = req.params.id;
     const userId =req.user._id 
 
-    const order = await Order.findOne(orderId).populate('products');
+    const order = await Order.findById(orderId).populate('products');
 
     if (!order) {
         return next(new AppError('Order not found', 404));
@@ -95,7 +91,7 @@ export const calculateOrderTotals =catchError( async( req,res,next) => {
     let totalPrice = 0;
 
     for (const item of order.products) {
-        const product = await Product.findOne(item.productId);
+        const product = await Product.find(item.productId);
         if (product) {
             totalAmount += item.quantity;
             totalPrice += item.price * item.quantity;

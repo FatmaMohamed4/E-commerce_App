@@ -1,7 +1,7 @@
 import mongoose, { model } from "mongoose";
 
 const checkSchema = new mongoose.Schema({
-    Address :{
+    address :{
         type : String , 
         required :[true ,"Enter your Adress in detail"] 
     } ,
