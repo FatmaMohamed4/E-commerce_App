@@ -4,17 +4,6 @@ import CheckOut from "../models/checkOutModel.js";
 import Order from "../models/orderModel.js";
 import { SUCCESS } from "../utils/statusText.js";
 
-export const getCheckOut = catchError(async (req, res, next) => {
-  const user = req.user._id;
-  const id = req.params.OrderId;
-  const address = req.body.address;
-  const payment = req.body.payment;
-  const fName = req.body.fName;
-  const city = req.body.city;
-  const order = await Order.findOne(id);
-  if (!order) {
-    return next(new AppError("Order not found", 404));
-  }
 
 export const getCheckOut = catchError(async (req, res, next) => {
     const user = req.user._id;
@@ -53,7 +42,7 @@ export const getCheckOut = catchError(async (req, res, next) => {
         // totalCost: checkOut.totalCost
     });
 });
-})
+
 
 
 export const editCheckOut = catchError(async (req, res, next) => {
