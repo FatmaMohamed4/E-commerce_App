@@ -1,4 +1,3 @@
-import AppError from "../middlewares/AppError.js";
 import catchError from "../middlewares/catchError.js";
 import Product from "../models/productModel.js";
 
@@ -16,32 +15,30 @@ export const getProducts = catchError(async (req, res, next) => {
 
 // Update a product
 export const updateProduct = catchError(async (req, res, next) => {
-    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body.quantity, {
-        new: true,
-        runValidators: true
-    }).select('-_id -slug -__v');
-
-    if (!updatedProduct) {
-        return next(new AppError('Product not found', 404));
+  const updatedProduct = await Product.findByIdAndUpdate(
+    req.params.productId,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
     }
+  ).select(selectRoles);
 
-    res.status(200).json({
-        status: true,
-        message: updatedProduct
-    });
+  if (!updatedProduct) {
+    return respondWithError(next, "Product not found", 404);
+  }
+
+  respondWithSuccess(res, { product: updatedProduct });
 });
 
 // Delete a product
 export const deleteProduct = catchError(async (req, res, next) => {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id).select('-_id -slug -__v');
-    if (!deletedProduct) {
-        return next(new AppError('Product not found', 404));
-    }
-
-    res.status(200).json({
-        status: true,
-        deletedProduct: deletedProduct
-    });
+  const deletedProduct = await Product.deleteOne({ _id: req.params.productId });
+  if (deletedProduct.deletedCount === 0) {
+    return respondWithError(next, "Product not found", 404);
+  }
+  const products = await Product.find({}).select(selectRoles);
+  respondWithSuccess(res, { products });
 });
 
 
@@ -56,25 +53,6 @@ export const addProduct = catchError(async(req,res,next)=>{
           
     }
 )
-
-// export const getProduct = catchError(async (req, res, next) => {
-//     const productName =req.body
-//     const regex = new RegExp(productName, 'i'); // 'i' makes it case-insensitive
-//     let product
-
-//     if(productName){
-//         product = await Product.find(
-//             { $or: 
-//                 [{ productName: { $regex: regex } },
-//                  { slug: { $regex: regex } } ,
-//                 ] })
-//     }
-//     res.status(200).json({
-//         status: true,
-//         message: product
-//     });
-// });
-
 
 
 export const getProductByName= catchError(async (req, res, next) => {

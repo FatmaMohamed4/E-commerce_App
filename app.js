@@ -1,14 +1,12 @@
-
-import express  from 'express';
-import productRoute from './routes/productRoute.js';
-import categoryRoute from './routes/categoryRoute.js';
-import userRoute from './routes/userRoute.js';
-import globalError from './middlewares/errMiddleware.js';
-import cors from 'cors'
-import orderRoute from './routes/orderRoute.js';
-import checkRoute from './routes/checkRoute.js';
-import employeeRoute from './routes/employeeRoute.js';
-import bodyParser from 'body-parser';
+import express from "express";
+import productRoute from "./routes/productRoute.js";
+import categoryRoute from "./routes/categoryRoute.js";
+import userRoute from "./routes/userRoute.js";
+import globalError from "./middlewares/errMiddleware.js";
+import cors from "cors";
+import orderRoute from "./routes/orderRoute.js";
+import checkRoute from "./routes/checkRoute.js";
+import employeeRoute from "./routes/employeeRoute.js";
 
 const app = express();
 app.use(express.json());
@@ -25,10 +23,10 @@ app.use('/order',orderRoute)
 app.use('/checkout',checkRoute)
 app.use('/employee',employeeRoute)
 
-app.use(globalError)
+app.use(globalError);
 
-app.use('*', (req, res) => {
-    res.json({ msg: "Cannot find the URL :" + req.originalUrl });
-  });
- 
-export default app
+app.use("*", (req, res) => {
+  res.json({ msg: "Cannot find the URL :" + req.originalUrl });
+});
+
+export default app;
