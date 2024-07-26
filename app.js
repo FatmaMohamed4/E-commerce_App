@@ -10,18 +10,14 @@ import employeeRoute from "./routes/employeeRoute.js";
 
 const app = express();
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
-// app.use("/products", productRoute);
-
-
-
-app.use('/product',productRoute)
-app.use('/category', categoryRoute)
-app.use('/user',userRoute)
-app.use('/order',orderRoute)
-app.use('/checkout',checkRoute)
-app.use('/employee',employeeRoute)
+app.use("/products", productRoute);
+app.use("/category", categoryRoute);
+app.use("/user", userRoute);
+app.use("/order", orderRoute);
+app.use("/checkout", checkRoute);
+app.use("/employee", employeeRoute);
 
 app.use(globalError);
 

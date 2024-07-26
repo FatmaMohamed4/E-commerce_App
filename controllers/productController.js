@@ -1,16 +1,37 @@
 import catchError from "../middlewares/catchError.js";
 import Product from "../models/productModel.js";
+import {
+  respondWithError,
+  respondWithSuccess,
+} from "./../middlewares/responseHandlers.js";
+let selectRoles = "-slug -__v";
+// add product
+export const addProduct = catchError(async (req, res, next) => {
+  const image = req.body.image;
+  const newProduct = await Product.create(req.body);
+  if (!newProduct) {
+    return respondWithError(next, "Error adding new product", 400);
+  }
+  respondWithSuccess(res, { message: "Added a new product", newProduct }, 201);
+});
 
-// Get all products
 export const getProducts = catchError(async (req, res, next) => {
-    const products = await Product.find().select('-_id -slug -__v').limit(3)
-    if (!products.length) {
-        return next(new AppError('Products not found', 404));
-    }
-    res.status(200).json({
-        status: true,
-        message: products
-    });
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const skip = (page - 1) * limit;
+  const products = await Product.find({}, { __v: false })
+    .select(selectRoles)
+    .limit(limit)
+    .skip(skip);
+  respondWithSuccess(res, { products });
+});
+
+export const getProduct = catchError(async (req, res, next) => {
+  const product = await Product.findById(req.params.productId);
+  if (!product) {
+    return respondWithError(next, "Product not found", 404);
+  }
+  respondWithSuccess(res, { product });
 });
 
 // Update a product
@@ -40,49 +61,3 @@ export const deleteProduct = catchError(async (req, res, next) => {
   const products = await Product.find({}).select(selectRoles);
   respondWithSuccess(res, { products });
 });
-
-
-export const addProduct = catchError(async(req,res,next)=>{
-            const photo = req.body.photo;
-            const product = await Product.create(req.body)
-            res.status(201).json({
-                status: true,
-                message : "Created",    
-                product
-            });
-          
-    }
-)
-
-
-export const getProductByName= catchError(async (req, res, next) => {
-    const { name } = req.body;
-    let product;
-
-    if (name) {
-        const regex = new RegExp(name, 'i'); // 'i' makes it case-insensitive
-        product = await Product.find(
-            { $or: [{ productName: { $regex: regex } }, { slug: { $regex: regex } }] }
-        ).select('-__v -slug');
-    }
-
-    if (!product || product.length === 0) {
-        return next(new AppError('Product not found', 404));
-    }
-
-    res.status(200).json({
-        status: 'success',
-        product: product
-    });
-});
-
-export const getProduct =catchError(async(req,res,next)=>{
-   const product = await Product.findById(req.body.id)
-   if(!product){
-    return next(new AppError('Product not found', 404));
-   }
-   res.status(200).json({
-    status: 'success',
-    product: product
-});
-})

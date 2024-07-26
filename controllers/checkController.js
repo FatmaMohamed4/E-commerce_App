@@ -4,46 +4,49 @@ import CheckOut from "../models/checkOutModel.js";
 import Order from "../models/orderModel.js";
 import { SUCCESS } from "../utils/statusText.js";
 
-
 export const getCheckOut = catchError(async (req, res, next) => {
-    const user = req.user._id;
-    // const id = req.params.OrderId
-    const { address, payment, fName, city } = req.body;
+  const user = req.user._id;
+  const id = req.params.OrderId;
+  const address = req.body.address;
+  const payment = req.body.payment;
+  const fName = req.body.fName;
+  const city = req.body.city;
+  const order = await Order.findOne(id);
+  if (!order) {
+    return next(new AppError("Order not found", 404));
+  }
 
-    const order = await Order.findById(req.params.orderId).populate('products')
-    if (!order) {
-        return next(new AppError('Order not found', 404));
-    }
+  // Ensure address and payment details are provided
+  if (!address || !payment || !fName) {
+    return next(new AppError("Field id required", 400));
+  }
 
-    // Ensure address and payment details are provided
-    if (!address || !payment || !fName) {
-        return next(new AppError('Field is required', 400));
-    }
+  const checkOut = await CheckOut.create({
+    address,
+    payment,
+    order: id,
+    userId: user,
+    fName,
+    city,
+  });
+  const totalCost = await Order.findOne(id).select(
+    "-userId -products -totalAmount -_id -createdAt -updatedAt -__v"
+  );
+  checkOut.TotalCost = order.totalCost;
 
-    const checkOut = await CheckOut.create({ address, payment, order :order, userId: user, fName, city });
+  await checkOut.save();
 
-    const orderDetails = await Order.findById(req.params.orderId)
-        .select('-userId -products -totalAmount -_id -createdAt -updatedAt -__v');
-
-    checkOut.totalCost = order.totalPrice;
-
-    await checkOut.save();
-
-    if (!checkOut) {
-        return next(new AppError('Oops! Order Failed', 400));
-    }
-
-    res.status(201).json({
-        status: true,
-        message: "Your Order has been accepted",
-        order
-        // address,
-        // payment,
-        // totalCost: checkOut.totalCost
-    });
+  if (!checkOut) {
+    return next(new AppError("Oops! Order Failed", 400));
+  }
+  res.status(201).json({
+    status: SUCCESS,
+    message: "Your Order has been accepted",
+    address,
+    payment,
+    totalCost,
+  });
 });
-
-
 
 export const editCheckOut = catchError(async (req, res, next) => {
   const userId = req.user._id;
@@ -78,4 +81,4 @@ export const editCheckOut = catchError(async (req, res, next) => {
     message: "Checkout updated successfully",
     checkOut,
   });
-})
+});

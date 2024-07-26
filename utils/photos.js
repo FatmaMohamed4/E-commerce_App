@@ -48,16 +48,6 @@ export const uploadPhoto = async (req, res, next) => {
 
       const result = await cloudinary.uploader.upload(req.file.path);
       req.body.photo = result.secure_url;
-
-          // Delete the file from the uploads folder after uploading to Cloudinary
-          fs.unlink(req.file.path, (err) => {
-            if (err) {
-              console.error('Failed to delete local file:', err);
-            }
-          });
-    
-
-
       next();
     } catch (err) {
       res.status(500).send("Error processing request");
